@@ -1,0 +1,424 @@
+﻿@page "/"
+@using Thornthwaite.Models
+@using Thornthwaite.Services.Interface
+
+<PageTitle>Index</PageTitle>
+
+<div>
+    <nav class="navbar navbar-light bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="form-group row">
+                <label for="inputPassword" class="col-sm-6 col-form-label">Enlem (Derece, Dakika):</label>
+                <div class="col-sm-6">
+                    <NumberInput Class="form-control" TValue="double" @bind-Value="@enlem" />
+                </div>
+            </div>
+            <form class="d-flex gap-2 input-group w-auto">
+                <InputText class="form-control rounded" @bind-Value="@istasyonAdi" Placeholder="İstasyon Adı" />
+                <Button Color="ButtonColor.Primary" @onclick="@OnClick">Hesaplama Yap</Button>
+            </form>
+        </div>
+    </nav>
+
+    <Alert Class="mt-2" Color="AlertColor.Secondary">
+        <b>
+            <Icon Name="IconName.InfoCircleFill" class="me-2"></Icon> Hesaplama yaptığınızda veri tabloları
+            gözükecektir.
+        </b> Üstte bulunan veri setlerini doldurduktan sonra <a>Hesaplama Yap</a> butonuna tıkladığınızda hesaplamalar
+        tablo halinde gözükecektir.
+    </Alert>
+
+    <div class="mt-3 bg-light p-1">
+        <h4>Aylık Ortalama Sıcaklık</h4>
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Ocak</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Ocak" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Şubat</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Subat" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Mart</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Mart" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Nisan</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Nisan" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Mayıs</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Mayis" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Haziran</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Haziran" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Temmuz</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Temmuz" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Ağustos</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Agustos" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Eylül</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Eylul" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Ekim</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Ekim" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Kasım</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Kasim" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Aralık</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikOrtalamaSicaklikInput.Aralik" AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Yıllık</label>
+                <InputText Class="form-control-sm w-75" Disabled="true" @bind-Value="@aylikOrtalamaSicaklikYillikFormat" />
+            </div>
+        </div>
+    </div>
+
+    <Grid @ref="grid" TItem="TableModel" class="table table-hover table-bordered table-striped mt-2"
+          Data="tableModels1">
+        <GridColumn TItem="TableModel" HeaderText="Su Bilançosu Tablosu">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ocak">
+            @context.Ocak.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Şubat">
+            @context.Subat.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Mart">
+            @context.Mart.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Nisan">
+            @context.Nisan.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Mayıs">
+            @context.Mayis.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Haziran">
+            @context.Haziran.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Temmuz">
+            @context.Temmuz.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ağustos">
+            @context.Agustos.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Eylül">
+            @context.Eylul.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ekim">
+            @context.Ekim.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Kasım">
+            @context.Kasim.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Aralık">
+            @context.Aralik.ToString("0.00")
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Yıllık">
+            @context.Yillik.ToString("0.00")
+        </GridColumn>
+    </Grid>
+</div>
+
+<div>
+    <div class="mt-3 bg-light p-1">
+        <h4>Aylık Toplam Yağış</h4>
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Ocak</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Ocak"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Şubat</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Subat"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Mart</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Mart"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Nisan</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Nisan"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Mayıs</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Mayis"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Haziran</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Haziran"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Temmuz</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Temmuz"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Ağustos</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Agustos"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Eylül</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Eylul"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Ekim</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Ekim"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Kasım</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Kasim"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Aralık</label>
+                <NumberInput Class="form-control-sm" TValue="double" @bind-Value="@aylikToplamYagisInput.Aralik"
+                             AllowNegativeNumbers="true" />
+            </div>
+            <div class="col">
+                <label class="form-label">Yıllık</label>
+                <NumberInput Class="form-control-sm" Disabled="true" TValue="double"
+                             @bind-Value="@aylikToplamYagisYillik" AllowNegativeNumbers="true" />
+            </div>
+        </div>
+    </div>
+
+    <Grid @ref="grid2" TItem="TableModel" class="table table-hover table-bordered table-striped mt-2"
+          Data="tableModels2">
+        <GridColumn TItem="TableModel" HeaderText="Su Bilançosu Tablosu">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ocak">
+            @context.Ocak
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Şubat">
+            @context.Subat
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Mart">
+            @context.Mart
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Nisan">
+            @context.Nisan
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Mayıs">
+            @context.Mayis
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Haziran">
+            @context.Haziran
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Temmuz">
+            @context.Temmuz
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ağustos">
+            @context.Agustos
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Eylül">
+            @context.Eylul
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Ekim">
+            @context.Ekim
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Kasım">
+            @context.Kasim
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Aralık">
+            @context.Aralik
+        </GridColumn>
+        <GridColumn TItem="TableModel" HeaderText="Yıllık">
+            @context.Yillik
+        </GridColumn>
+    </Grid>
+</div>
+
+<div class="row mt-2">
+    <div class="col-6">
+        <LineChart @ref="lineChart" Class="mb-4" />
+    </div>
+    <div class="col-6">
+        <p>falan filan</p>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    ICalculateService calculateService { get; set; }
+
+    private LineChart lineChart = default!;
+    private LineChartOptions lineChartOptions = default!;
+    private ChartData chartData = default!;
+
+    private double aylikOrtalamaSicaklikYillik;
+    private string aylikOrtalamaSicaklikYillikFormat;
+    private double aylikToplamYagisYillik;
+
+    private InputModel aylikOrtalamaSicaklikInput = new();
+    private InputModel aylikToplamYagisInput = new();
+
+    private List<TableModel> tableModels1;
+    private List<TableModel> tableModels2;
+    Grid<TableModel> grid;
+    Grid<TableModel> grid2;
+
+    private string istasyonAdi;
+    private double enlem;
+
+    protected override void OnInitialized()
+    {
+        // aylikOrtalamaSicaklikInput = new()
+        //     {
+        //         Ocak = 6.4,
+        //         Subat = 7.1,
+        //         Mart = 8.1,
+        //         Nisan = 12.6,
+        //         Mayis = 17.2,
+        //         Haziran = 21.8,
+        //         Temmuz = 23.8,
+        //         Agustos = 23.8,
+        //         Eylul = 20.9,
+        //         Ekim = 16.4,
+        //         Kasim = 12.8,
+        //         Aralik = 8.8,
+        //     };
+
+
+        aylikOrtalamaSicaklikInput = new()
+            {
+                Ocak = -11.6,
+                Subat = -10,
+                Mart = -4.2,
+                Nisan = 4.5,
+                Mayis = 10.2,
+                Haziran = 13.5,
+                Temmuz = 17.2,
+                Agustos = 17.3,
+                Eylul = 13.1,
+                Ekim = 7,
+                Kasim = 0.8,
+                Aralik = -7.5,
+            };
+
+        tableModels1 = new();
+        tableModels2 = new();
+
+        var colors = ColorBuilder.CategoricalTwelveColors;
+
+        var labels = new List<string> { "January", "February", "March", "April", "May", "June", "July", "August", "September",
+"October", "November", "December" };
+        var datasets = new List<IChartDataset>();
+
+        var dataset1 = new LineChartDataset
+            {
+                Label = "Windows",
+                Data = new List<double> { 7265791, 5899643, 6317759, 6315641, 5338211, 8496306, 7568556, 8538933, 8274297, 8657298,
+7548388, 7764845 },
+                BackgroundColor = new List<string> { colors[0] },
+                BorderColor = new List<string> { colors[0] },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { colors[0] },
+                PointRadius = new List<int> { 0 }, // hide points
+                PointHoverRadius = new List<int> { 4 }
+            };
+        datasets.Add(dataset1);
+
+        var dataset2 = new LineChartDataset
+            {
+                Label = "macOS",
+                Data = new List<double> { 1809499, 1816642, 2122410, 1809499, 1850793, 1846743, 1954797, 2391313, 1983430, 2469918,
+2633303, 2821149 },
+                BackgroundColor = new List<string> { colors[1] },
+                BorderColor = new List<string> { colors[1] },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { colors[1] },
+                PointRadius = new List<int> { 0 }, // hide points
+                PointHoverRadius = new List<int> { 4 }
+            };
+        datasets.Add(dataset2);
+
+        var dataset3 = new LineChartDataset
+            {
+                Label = "Other",
+                Data = new List<double> { 1081241, 1100363, 1118136, 1073255, 1120315, 1395736, 1488788, 1489466, 1489947, 1414739,
+1735811, 1820171 },
+                BackgroundColor = new List<string> { colors[2] },
+                BorderColor = new List<string> { colors[2] },
+                BorderWidth = new List<double> { 2 },
+                HoverBorderWidth = new List<double> { 4 },
+                PointBackgroundColor = new List<string> { colors[2] },
+                PointRadius = new List<int> { 0 }, // hide points
+                PointHoverRadius = new List<int> { 4 }
+            };
+        datasets.Add(dataset3);
+
+        chartData = new ChartData
+            {
+                Labels = labels,
+                Datasets = datasets
+            };
+
+        lineChartOptions = new();
+        lineChartOptions.Responsive = true;
+        lineChartOptions.Interaction = new Interaction { Mode = InteractionMode.Index };
+
+        lineChartOptions.Scales.X.Title.Text = "2019";
+        lineChartOptions.Scales.X.Title.Display = true;
+
+        lineChartOptions.Scales.Y.Title.Text = "Visitors";
+        lineChartOptions.Scales.Y.Title.Display = true;
+
+        lineChartOptions.Plugins.Title.Text = "Operating system";
+        lineChartOptions.Plugins.Title.Display = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await lineChart.InitializeAsync(chartData, lineChartOptions);
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected async Task OnClick()
+    {
+        tableModels1.Clear();
+        var resultSicaklikIndisi = calculateService.SicaklikIndisi(aylikOrtalamaSicaklikInput);
+        var resultDuzeltilmemisPE = calculateService.DuzeltilmemisPE(aylikOrtalamaSicaklikInput, resultSicaklikIndisi.Yillik);
+
+        // TODO: wrong calculate
+        aylikOrtalamaSicaklikYillik = aylikOrtalamaSicaklikInput.Ocak + aylikOrtalamaSicaklikInput.Subat +
+        aylikOrtalamaSicaklikInput.Mart + aylikOrtalamaSicaklikInput.Nisan + aylikOrtalamaSicaklikInput.Mayis +
+        aylikOrtalamaSicaklikInput.Haziran + aylikOrtalamaSicaklikInput.Temmuz + aylikOrtalamaSicaklikInput.Agustos +
+        aylikOrtalamaSicaklikInput.Eylul + aylikOrtalamaSicaklikInput.Ekim + aylikOrtalamaSicaklikInput.Kasim +
+        aylikOrtalamaSicaklikInput.Aralik;
+
+        aylikOrtalamaSicaklikYillikFormat = aylikOrtalamaSicaklikYillik.ToString("0.00");
+
+        tableModels1.Add(resultSicaklikIndisi);
+        tableModels1.Add(resultDuzeltilmemisPE);
+        await grid.RefreshDataAsync();
+    }
+}

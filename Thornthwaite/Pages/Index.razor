@@ -8,9 +8,9 @@
     <nav class="navbar navbar-light bg-body-tertiary">
         <div class="container-fluid">
             <div class="form-group row">
-                <label for="inputPassword" class="col-sm-6 col-form-label">Enlem (Derece, Dakika):</label>
+                <label for="inputPassword" class="col-sm-6 col-form-label">Enlem:</label>
                 <div class="col-sm-6">
-                    <NumberInput Class="form-control" TValue="double" @bind-Value="@enlem" />
+                    <NumberInput Class="form-control" TValue="int" Min="0" Max="50" @bind-Value="@enlem" />
                 </div>
             </div>
             <form class="d-flex gap-2 input-group w-auto">
@@ -29,7 +29,7 @@
     </Alert>
 
     <div class="mt-3 bg-light p-1">
-        <h4>Aylık Ortalama Sıcaklık</h4>
+        <h5>Aylık Ortalama Sıcaklık</h5>
         <div class="row">
             <div class="col">
                 <label class="form-label">Ocak</label>
@@ -135,7 +135,7 @@
 
 <div>
     <div class="mt-3 bg-light p-1">
-        <h4>Aylık Toplam Yağış</h4>
+        <h5>Aylık Toplam Yağış</h5>
         <div class="row">
             <div class="col">
                 <label class="form-label">Ocak</label>
@@ -263,7 +263,7 @@
 
 @code {
     [Inject]
-    ICalculateService calculateService { get; set; }
+    IAylikOralamaSicaklikService calculateService { get; set; }
 
     private LineChart lineChart = default!;
     private LineChartOptions lineChartOptions = default!;
@@ -282,7 +282,7 @@
     Grid<TableModel> grid2;
 
     private string istasyonAdi;
-    private double enlem;
+    private int enlem;
 
     protected override void OnInitialized()
     {
@@ -318,6 +318,9 @@
                 Kasim = 0.8,
                 Aralik = -7.5,
             };
+
+        // TODO: delete value
+        enlem = 41;
 
         tableModels1 = new();
         tableModels2 = new();
@@ -405,20 +408,25 @@
     protected async Task OnClick()
     {
         tableModels1.Clear();
+
         var resultSicaklikIndisi = calculateService.SicaklikIndisi(aylikOrtalamaSicaklikInput);
         var resultDuzeltilmemisPE = calculateService.DuzeltilmemisPE(aylikOrtalamaSicaklikInput, resultSicaklikIndisi.Yillik);
+        var resultEnlemKatsayisi = calculateService.EnlemKatsayisi(enlem);
+        var resultDuzeltilmisPE = calculateService.DuzeltilmisPE(resultDuzeltilmemisPE, resultEnlemKatsayisi);
 
-        // TODO: wrong calculate
-        aylikOrtalamaSicaklikYillik = aylikOrtalamaSicaklikInput.Ocak + aylikOrtalamaSicaklikInput.Subat +
+        aylikOrtalamaSicaklikYillik = (aylikOrtalamaSicaklikInput.Ocak + aylikOrtalamaSicaklikInput.Subat +
         aylikOrtalamaSicaklikInput.Mart + aylikOrtalamaSicaklikInput.Nisan + aylikOrtalamaSicaklikInput.Mayis +
         aylikOrtalamaSicaklikInput.Haziran + aylikOrtalamaSicaklikInput.Temmuz + aylikOrtalamaSicaklikInput.Agustos +
         aylikOrtalamaSicaklikInput.Eylul + aylikOrtalamaSicaklikInput.Ekim + aylikOrtalamaSicaklikInput.Kasim +
-        aylikOrtalamaSicaklikInput.Aralik;
+        aylikOrtalamaSicaklikInput.Aralik) / 12;
 
         aylikOrtalamaSicaklikYillikFormat = aylikOrtalamaSicaklikYillik.ToString("0.00");
 
         tableModels1.Add(resultSicaklikIndisi);
         tableModels1.Add(resultDuzeltilmemisPE);
+        tableModels1.Add(resultEnlemKatsayisi);
+        tableModels1.Add(resultDuzeltilmisPE);
+
         await grid.RefreshDataAsync();
     }
 }

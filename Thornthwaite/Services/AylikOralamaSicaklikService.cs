@@ -4,7 +4,7 @@ using Thornthwaite.Services.Interface;
 
 namespace Thornthwaite.Services;
 
-public class CalculateService : ICalculateService
+public class AylikOralamaSicaklikService : IAylikOralamaSicaklikService
 {
     public TableModel SicaklikIndisi(InputModel model)
     {
@@ -553,5 +553,134 @@ public class CalculateService : ICalculateService
         };
 
         return calculate;
+    }
+
+    public TableModel EnlemKatsayisi(int secilenEnlem)
+    {
+        // Verilerinizi bir matris olarak tanımlayın
+        double[,] veriler = new double[,]
+        {
+            {0, 1.04, 0.94, 1.04, 1.01, 1.04, 1.01, 1.04, 1.04, 1.01, 1.04, 1.01, 1.04},
+            {5, 1.02, 0.93, 1.03, 1.02, 1.06, 1.03, 1.06, 1.05, 1.01, 1.03, 0.99, 1.02},
+            {10, 1.00, 0.91, 1.03, 1.03, 1.08, 1.06, 1.08, 1.07, 1.02, 1.02, 0.98, 0.99},
+            {15, 0.97, 0.91, 1.03, 1.04, 1.11, 1.08, 1.12, 1.08, 1.02, 1.01, 0.95, 0.97},
+            {20, 0.95, 0.90, 1.03, 1.05, 1.13, 1.11, 1.14, 1.11, 1.02, 1.00, 0.93, 0.94},
+            {25, 0.93, 0.89, 1.03, 1.06, 1.15, 1.14, 1.17, 1.12, 1.02, 0.99, 0.91, 0.91},
+            {26, 0.92, 0.88, 1.03, 1.06, 1.15, 1.15, 1.17, 1.12, 1.02, 0.99, 0.91, 0.91},
+            {27, 0.92, 0.88, 1.03, 1.07, 1.16, 1.15, 1.18, 1.13, 1.02, 0.99, 0.90, 0.90},
+            {28, 0.91, 0.88, 1.03, 1.07, 1.16, 1.16, 1.18, 1.13, 1.02, 0.98, 0.90, 0.90},
+            {29, 0.91, 0.87, 1.03, 1.07, 1.17, 1.16, 1.19, 1.13, 1.03, 0.98, 0.90, 0.89},
+            {30, 0.90, 0.87, 1.03, 1.08, 1.18, 1.17, 1.20, 1.14, 1.03, 0.98, 0.89, 0.88},
+            {31, 0.90, 0.87, 1.03, 1.08, 1.18, 1.18, 1.20, 1.14, 1.03, 0.98, 0.89, 0.88},
+            {32, 0.89, 0.86, 1.03, 1.08, 1.19, 1.19, 1.21, 1.15, 1.03, 0.98, 0.88, 0.87},
+            {33, 0.88, 0.86, 1.03, 1.09, 1.19, 1.20, 1.22, 1.15, 1.03, 0.97, 0.88, 0.86},
+            {34, 0.88, 0.85, 1.03, 1.09, 1.20, 1.20, 1.22, 1.16, 1.03, 0.97, 0.87, 0.86},
+            {35, 0.87, 0.85, 1.03, 1.09, 1.21, 1.21, 1.23, 1.16, 1.03, 0.97, 0.86, 0.85},
+            {36, 0.87, 0.85, 1.03, 1.10, 1.21, 1.22, 1.24, 1.16, 1.03, 0.97, 0.86, 0.84},
+            {37, 0.86, 0.84, 1.03, 1.10, 1.22, 1.23, 1.25, 1.17, 1.03, 0.97, 0.85, 0.83},
+            {38, 0.85, 0.84, 1.03, 1.10, 1.23, 1.24, 1.25, 1.17, 1.04, 0.96, 0.84, 0.83},
+            {39, 0.85, 0.84, 1.03, 1.11, 1.23, 1.24, 1.26, 1.18, 1.04, 0.96, 0.84, 0.82},
+            {40, 0.84, 0.83, 1.03, 1.11, 1.24, 1.25, 1.27, 1.18, 1.04, 0.96, 0.83, 0.81},
+            {41, 0.83, 0.83, 1.03, 1.11, 1.25, 1.26, 1.27, 1.19, 1.04, 0.96, 0.82, 0.80},
+            {42, 0.82, 0.83, 1.03, 1.12, 1.26, 1.27, 1.28, 1.19, 1.04, 0.95, 0.82, 0.79},
+            {43, 0.81, 0.82, 1.02, 1.12, 1.26, 1.28, 1.29, 1.20, 1.04, 0.95, 0.81, 0.77},
+            {44, 0.81, 0.82, 1.02, 1.13, 1.27, 1.29, 1.30, 1.20, 1.04, 0.95, 0.80, 0.76},
+            {45, 0.80, 0.81, 1.02, 1.13, 1.28, 1.29, 1.31, 1.21, 1.04, 0.94, 0.79, 0.75},
+            {46, 0.79, 0.81, 1.02, 1.13, 1.29, 1.31, 1.32, 1.22, 1.04, 0.94, 0.79, 0.74},
+            {47, 0.77, 0.80, 1.02, 1.14, 1.30, 1.32, 1.33, 1.22, 1.04, 0.93, 0.78, 0.73},
+            {48, 0.76, 0.80, 1.02, 1.14, 1.31, 1.33, 1.34, 1.23, 1.05, 0.93, 0.77, 0.72},
+            {49, 0.75, 0.79, 1.02, 1.14, 1.32, 1.34, 1.35, 1.24, 1.05, 0.93, 0.76, 0.71},
+            {50, 0.74, 0.78, 1.02, 1.15, 1.33, 1.36, 1.37, 1.25, 1.06, 0.92, 0.76, 0.70}
+        };
+
+        // İlgili satırı bulun
+        int satirIndex = -1;
+        for (int i = 0; i < veriler.GetLength(0); i++)
+        {
+            if (veriler[i, 0] == secilenEnlem)
+            {
+                satirIndex = i;
+                break;
+            }
+        }
+
+        // Satır bulunduysa ekrana basın
+        if (satirIndex != -1)
+        {
+            var model = new TableModel
+            {
+                Name = "Enlem Katsayısı",
+                Ocak = veriler[satirIndex, 1],
+                Subat = veriler[satirIndex, 2],
+                Mart = veriler[satirIndex, 3],
+                Nisan = veriler[satirIndex, 4],
+                Mayis = veriler[satirIndex, 5],
+                Haziran = veriler[satirIndex, 6],
+                Temmuz = veriler[satirIndex, 7],
+                Agustos = veriler[satirIndex, 8],
+                Eylul = veriler[satirIndex, 9],
+                Ekim = veriler[satirIndex, 10],
+                Kasim = veriler[satirIndex, 11],
+                Aralik = veriler[satirIndex, 12],
+            };
+
+            return model;
+        }
+        else
+        {
+            var model = new TableModel
+            {
+                Name = "Enlem Katsayısı",
+                Ocak = 0,
+                Subat = 0,
+                Mart = 0,
+                Nisan = 0,
+                Mayis = 0,
+                Haziran = 0,
+                Temmuz = 0,
+                Agustos = 0,
+                Eylul = 0,
+                Ekim = 0,
+                Kasim = 0,
+                Aralik = 0,
+            };
+
+            return model;
+        }
+    }
+
+    public TableModel DuzeltilmisPE(TableModel duzeltilmemisPE, TableModel enlemKatsayisi)
+    {
+        double ocak = duzeltilmemisPE.Ocak * enlemKatsayisi.Ocak;
+        double subat = duzeltilmemisPE.Subat * enlemKatsayisi.Subat;
+        double mart = duzeltilmemisPE.Mart * enlemKatsayisi.Mart;
+        double nisan = duzeltilmemisPE.Nisan * enlemKatsayisi.Nisan;
+        double mayis = duzeltilmemisPE.Mayis * enlemKatsayisi.Mayis;
+        double haziran = duzeltilmemisPE.Haziran * enlemKatsayisi.Haziran;
+        double temmuz = duzeltilmemisPE.Temmuz * enlemKatsayisi.Temmuz;
+        double agustos = duzeltilmemisPE.Agustos * enlemKatsayisi.Agustos;
+        double eylul = duzeltilmemisPE.Eylul * enlemKatsayisi.Eylul;
+        double ekim = duzeltilmemisPE.Ekim * enlemKatsayisi.Ekim;
+        double kasim = duzeltilmemisPE.Kasim * enlemKatsayisi.Kasim;
+        double aralik = duzeltilmemisPE.Aralik * enlemKatsayisi.Aralik;
+
+        var model = new TableModel
+        {
+            Name = "Düzeltilmiş PE",
+            Ocak = ocak,
+            Subat = subat,
+            Mart = mart,
+            Nisan = nisan,
+            Mayis = mayis,
+            Haziran = haziran,
+            Temmuz = temmuz,
+            Agustos = agustos,
+            Eylul = eylul,
+            Ekim = ekim,
+            Kasim = kasim,
+            Aralik = aralik
+        };
+
+        return model;
     }
 }

@@ -12,6 +12,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddBlazorBootstrap();
 
-builder.Services.AddTransient<ICalculateService, CalculateService>();
+builder.Services.AddTransient<IAylikOralamaSicaklikService, AylikOralamaSicaklikService>();
 
 await builder.Build().RunAsync();

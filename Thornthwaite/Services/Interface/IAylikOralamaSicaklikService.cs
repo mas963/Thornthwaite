@@ -2,8 +2,10 @@
 
 namespace Thornthwaite.Services.Interface;
 
-public interface ICalculateService
+public interface IAylikOralamaSicaklikService
 {
     TableModel SicaklikIndisi(InputModel model);
     TableModel DuzeltilmemisPE(InputModel model, double sicaklikIndisYillik);
+    TableModel EnlemKatsayisi(int secilenEnlem);
+    TableModel DuzeltilmisPE(TableModel duzeltilmemisPE, TableModel enlemKatsayisi);
 }

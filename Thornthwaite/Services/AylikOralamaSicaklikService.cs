@@ -555,10 +555,9 @@ public class AylikOralamaSicaklikService : IAylikOralamaSicaklikService
         return calculate;
     }
 
-    public TableModel EnlemKatsayisi(int secilenEnlem)
+    public TableModel EnlemKatsayisi(int selectedLatitude)
     {
-        // Verilerinizi bir matris olarak tanımlayın
-        double[,] veriler = new double[,]
+        double[,] datas = new double[,]
         {
             {0, 1.04, 0.94, 1.04, 1.01, 1.04, 1.01, 1.04, 1.04, 1.01, 1.04, 1.01, 1.04},
             {5, 1.02, 0.93, 1.03, 1.02, 1.06, 1.03, 1.06, 1.05, 1.01, 1.03, 0.99, 1.02},
@@ -593,35 +592,33 @@ public class AylikOralamaSicaklikService : IAylikOralamaSicaklikService
             {50, 0.74, 0.78, 1.02, 1.15, 1.33, 1.36, 1.37, 1.25, 1.06, 0.92, 0.76, 0.70}
         };
 
-        // İlgili satırı bulun
-        int satirIndex = -1;
-        for (int i = 0; i < veriler.GetLength(0); i++)
+        int rowIndex = -1;
+        for (int i = 0; i < datas.GetLength(0); i++)
         {
-            if (veriler[i, 0] == secilenEnlem)
+            if (datas[i, 0] == selectedLatitude)
             {
-                satirIndex = i;
+                rowIndex = i;
                 break;
             }
         }
 
-        // Satır bulunduysa ekrana basın
-        if (satirIndex != -1)
+        if (rowIndex != -1)
         {
             var model = new TableModel
             {
                 Name = "Enlem Katsayısı",
-                Ocak = veriler[satirIndex, 1],
-                Subat = veriler[satirIndex, 2],
-                Mart = veriler[satirIndex, 3],
-                Nisan = veriler[satirIndex, 4],
-                Mayis = veriler[satirIndex, 5],
-                Haziran = veriler[satirIndex, 6],
-                Temmuz = veriler[satirIndex, 7],
-                Agustos = veriler[satirIndex, 8],
-                Eylul = veriler[satirIndex, 9],
-                Ekim = veriler[satirIndex, 10],
-                Kasim = veriler[satirIndex, 11],
-                Aralik = veriler[satirIndex, 12],
+                Ocak = datas[rowIndex, 1],
+                Subat = datas[rowIndex, 2],
+                Mart = datas[rowIndex, 3],
+                Nisan = datas[rowIndex, 4],
+                Mayis = datas[rowIndex, 5],
+                Haziran = datas[rowIndex, 6],
+                Temmuz = datas[rowIndex, 7],
+                Agustos = datas[rowIndex, 8],
+                Eylul = datas[rowIndex, 9],
+                Ekim = datas[rowIndex, 10],
+                Kasim = datas[rowIndex, 11],
+                Aralik = datas[rowIndex, 12],
             };
 
             return model;
